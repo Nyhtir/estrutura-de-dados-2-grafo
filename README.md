@@ -1,0 +1,29 @@
+# estrutura-de-dados-2-grafo
+ Resumo:
+ - Dados: dict disciplina -> set(pré-requisitos diretos).
+ - Aresta pre -> disciplina indica que "pre" é pré-requisito de "disciplina".
+ - Operações principais:
+   * adicionar/remover disciplinas e pré-requisitos;
+   * listar pré-requisitos diretos e todos (ancestros) via DFS;
+   * checar dependência entre duas disciplinas (DFS);
+   * detectar ciclos e obter ordenação topológica (algoritmo de Kahn);
+   * gerar plano mínimo para uma disciplina (topológica no subgrafo dos ancestrais);
+   * obter progressão por níveis (disciplinas que podem ser cursadas em paralelo).
+ - Nomes e comentários em português para facilitar leitura.
+
+# --- Exemplo rápido de uso---
+
+if __name__ == "__main__":<br>
+    rede = RedeDisciplinas()<br>
+    rede.adicionar_pre_requisito("Matemática I", "Matemática II")<br>
+    rede.adicionar_pre_requisito("Matemática II", "Matemática III")<br>
+    rede.adicionar_pre_requisito("Programação I", "Programação II")<br>
+    rede.adicionar_pre_requisito("Matemática II", "Algoritmos")<br>
+    rede.adicionar_pre_requisito("Programação II", "Algoritmos")<br>
+
+    print("Todas:", rede.disciplinas())
+    print("Pré-requisitos de Algoritmos:", rede.prerequisitos_diretos("Algoritmos"))
+    print("Dependência Matemática I -> Algoritmos:", rede.existe_dependencia("Matemática I", "Algoritmos"))
+    print("Ordenação:", rede.ordenacao_topologica())
+    print("Plano:", rede.plano_de_estudo_para("Algoritmos"))
+    print("Progressão por níveis:", rede.progressao_por_niveis_para("Algoritmos"))
