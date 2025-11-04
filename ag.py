@@ -1,5 +1,72 @@
 from collections import deque
 from typing import Iterable
+# main.py
+from rede_disciplinas import RedeDisciplinas, CycleError
+
+def main():
+    # Cria uma rede de disciplinas
+    rede = RedeDisciplinas()
+
+    # Adiciona disciplinas
+    disciplinas = ["Matemática Básica", "Álgebra Linear", "Cálculo I", "Cálculo II", "Física I", "Física II", "Engenharia"]
+    for d in disciplinas:
+        rede.adicionar_disciplina(d)
+
+    # Define pré-requisitos
+    rede.adicionar_pre_requisito("Matemática Básica", "Cálculo I")
+    rede.adicionar_pre_requisito("Cálculo I", "Cálculo II")
+    rede.adicionar_pre_requisito("Álgebra Linear", "Física I")
+    rede.adicionar_pre_requisito("Cálculo I", "Física I")
+    rede.adicionar_pre_requisito("Física I", "Física II")
+    rede.adicionar_pre_requisito("Cálculo II", "Engenharia")
+    rede.adicionar_pre_requisito("Física II", "Engenharia")
+
+    # Mostra as disciplinas cadastradas
+    print(" Disciplinas na rede:")
+    print(rede.disciplinas())
+    print()
+
+    # Mostra pré-requisitos diretos e indiretos de uma disciplina
+    alvo = "Engenharia"
+    print(f" Pré-requisitos diretos de {alvo}: {rede.prerequisitos_diretos(alvo)}")
+    print(f" Todos os pré-requisitos de {alvo}: {rede.todos_prerequisitos(alvo)}")
+    print()
+
+    # Verifica dependência
+    print(f" 'Cálculo I' é pré-requisito de 'Engenharia'? {rede.existe_dependencia('Cálculo I', 'Engenharia')}")
+    print(f" 'Álgebra Linear' é pré-requisito de 'Cálculo II'? {rede.existe_dependencia('Álgebra Linear', 'Cálculo II')}")
+    print()
+
+    # Detecta ciclos
+    print(" A rede tem ciclos?", rede.tem_ciclo())
+    print()
+
+    # Ordenação topológica (ordem de estudo)
+    try:
+        ordem = rede.ordenacao_topologica()
+        print(" Ordem topológica (sem dependências violadas):")
+        print(ordem)
+    except CycleError as e:
+        print(" Erro:", e)
+    print()
+
+    # Plano de estudo para uma disciplina específica
+    try:
+        plano = rede.plano_de_estudo_para(alvo)
+        print(f" Plano de estudo até '{alvo}':")
+        print(plano)
+    except CycleError as e:
+        print(" Erro:", e)
+    print()
+
+    # Progressão por níveis (disciplinas que podem ser feitas em paralelo)
+    niveis = rede.progressao_por_niveis_para(alvo)
+    print(f" Progressão por níveis até '{alvo}':")
+    for i, nivel in enumerate(niveis, start=1):
+        print(f"Nível {i}: {nivel}")
+
+if __name__ == "__main__":
+    main()
 
 class CycleError(Exception):
     pass
